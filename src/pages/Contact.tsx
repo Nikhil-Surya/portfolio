@@ -47,7 +47,7 @@ const Contact = () => {
               <div className="space-y-4">
                 <div className="flex items-center space-x-3">
                   <Mail className="h-5 w-5 text-primary" />
-                  <a href="mailto:ns2330@rit.edu" className="text-white hover:underline">ns2330@rit.edu</a>
+                  <a href="mailto:ns2330@rit.edu" className="hover:underline text-black dark:text-white">ns2330@rit.edu</a>
                 </div>
                 <div className="flex items-center space-x-3">
                   <MapPin className="h-5 w-5 text-primary" />
@@ -220,7 +220,7 @@ const Contact = () => {
               <h4 className="text-xl font-bold mb-4">Resume Preview</h4>
               <div className="mb-4" style={{ height: '60vh' }}>
                 <iframe
-                  src="/Nikhil_Suryawanshi_CV.pdf"
+                  src={`${import.meta.env.BASE_URL}Nikhil_Suryawanshi_CV.pdf`}
                   title="Resume Preview"
                   width="100%"
                   height="100%"
@@ -228,7 +228,7 @@ const Contact = () => {
                 />
               </div>
               <a
-                href="/Nikhil_Suryawanshi_CV.pdf"
+                href={`${import.meta.env.BASE_URL}Nikhil_Suryawanshi_CV.pdf`}
                 download
                 className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >

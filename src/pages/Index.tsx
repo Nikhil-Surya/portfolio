@@ -143,7 +143,7 @@ const Index = () => {
             {/* Profile Image */}
             <div className="flex-1 h-full bg-muted rounded-lg border-2 border-muted-foreground/30 overflow-hidden dark:bg-gray-800">
               <img
-                src="/Portfolio_Photo.jpeg"
+                src={`${import.meta.env.BASE_URL}Portfolio_Photo.jpeg`}
                 alt="Portfolio"
                 className="object-cover w-full h-full rounded-lg shadow-md"
               />

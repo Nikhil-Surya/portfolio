@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Briefcase, Code, Globe } from 'lucide-react';
+import { useCountUp } from "@/components/use-count-up";
 
 interface StatItem {
-  icon: React.ComponentType<any>;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   label: string;
   value: number;
   suffix?: string;
@@ -33,34 +34,6 @@ const stats: StatItem[] = [
   }
 ];
 
-const useCountUp = (end: number, duration: number = 2000, isVisible: boolean = false) => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let startTime: number;
-    let animationFrame: number;
-
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      
-      const easeOutCubic = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(end * easeOutCubic * 100) / 100);
-
-      if (progress < 1) {
-        animationFrame = requestAnimationFrame(animate);
-      }
-    };
-
-    animationFrame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrame);
-  }, [end, duration, isVisible]);
-
-  return count;
-};
-
 export const StatsCounter: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -82,17 +55,20 @@ export const StatsCounter: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
+  // Use a single useCountUp and animate all stats to the same value for simplicity
+  const maxValue = Math.max(...stats.map(stat => stat.value));
+  const animatedValue = useCountUp(maxValue, 2000, isVisible);
+
   return (
     <div ref={sectionRef} className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-bold mb-2">By the Numbers</h2>
         <p className="text-muted-foreground">Quantifying my journey in data analytics</p>
       </div>
-      
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {stats.map((stat, index) => {
-          const count = useCountUp(stat.value, 2000, isVisible);
-          
+        {stats.map((stat) => {
+          // Clamp the animated value to each stat's value
+          const count = Math.min(animatedValue, stat.value);
           return (
             <Card key={stat.label} className="text-center hover:shadow-lg transition-all duration-300">
               <CardContent className="p-6">

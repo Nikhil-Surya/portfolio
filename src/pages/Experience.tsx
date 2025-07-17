@@ -11,7 +11,7 @@ const Experience = () => {
     "Rochester Institute of Technology": (
       <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center p-1">
         <img 
-          src="/RIT_logo.jpg" 
+          src={`${import.meta.env.BASE_URL}RIT_logo.jpg`} 
           alt="RIT Logo" 
           className="w-full h-full object-contain"
         />
@@ -20,7 +20,7 @@ const Experience = () => {
     "Coherent Corp": (
       <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center p-1">
         <img 
-          src="/Coherent-white-bg.png" 
+          src={`${import.meta.env.BASE_URL}Coherent-white-bg.png`} 
           alt="Coherent Corp Logo" 
           className="w-full h-full object-contain"
         />
@@ -29,7 +29,7 @@ const Experience = () => {
     "SankalpSoft": (
       <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center p-1">
         <img 
-          src="/sankalpsoft-white-bg.png" 
+          src={`${import.meta.env.BASE_URL}sankalpsoft-white-bg.png`} 
           alt="SankalpSoft Logo" 
           className="w-full h-full object-contain"
         />
@@ -38,7 +38,7 @@ const Experience = () => {
     "MASS Technologies": (
       <div className="w-14 h-14 bg-white rounded-lg flex items-center justify-center p-1">
         <img 
-          src="/Mass-white-bg.png" 
+          src={`${import.meta.env.BASE_URL}Mass-white-bg.png`} 
           alt="MASS Technologies Logo" 
           className="w-full h-full object-contain"
         />

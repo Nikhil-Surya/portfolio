@@ -87,7 +87,7 @@ const Index = () => {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
           <Button asChild size="lg" className="group">
-            <a href="/Nikhil_Suryawanshi_CV.pdf" download>
+            <a href={`${import.meta.env.BASE_URL}assets/Resume_Nikhil_Suryawanshi.pdf`} download>
               <Download className="h-4 w-4 mr-2" />
               Download Resume
             </a>

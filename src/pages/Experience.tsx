@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Building, Calendar, DollarSign, Target, ChevronDown, ChevronRight, ExternalLink } from 'lucide-react';
+import { Building, Calendar, DollarSign, Target, ChevronDown, ChevronRight, ExternalLink, ChevronUp, GraduationCap, Rocket, TrendingUp, BookOpen, Brain } from 'lucide-react';
+import { ImpactSummary } from '@/components/ImpactSummary';
+import { Button } from '@/components/ui/button';
 
 const Experience = () => {
   const [expandedExperience, setExpandedExperience] = useState<number | null>(null);
@@ -152,7 +154,7 @@ const Experience = () => {
 
     {
       "company": "SankalpSoft",
-      "role": "Database Developer Intern",
+      "role": "Data Engineer Intern",
       "period": "January 2022 - June 2022",
       "location": "Remote",
       "description": "Consulted clients to design scalable data architectures, enhance ETL/ELT pipelines, and optimize PL/SQL procedures to support high-performance analytics and system integration.",
@@ -230,150 +232,177 @@ const Experience = () => {
     }
   };
 
+  // Map experiences to timeline format
+  const journey = experiences.map((exp) => {
+    // Extract the start year from the period string
+    const year = exp.period.match(/\d{4}/)?.[0] || '';
+    // Pick an icon based on company or role
+    let icon = Brain;
+    if (exp.company.includes('Coherent')) icon = Rocket;
+    if (exp.company.includes('SankalpSoft')) icon = TrendingUp;
+    if (exp.company.includes('MASS')) icon = BookOpen;
+    if (exp.role.toLowerCase().includes('teaching')) icon = GraduationCap;
+    // Pick a color gradient for each experience
+    let color = 'from-blue-500 via-purple-500 to-emerald-500';
+    if (exp.company.includes('Coherent')) color = 'from-emerald-500 via-blue-500 to-purple-500';
+    if (exp.company.includes('SankalpSoft')) color = 'from-orange-500 via-pink-500 to-yellow-500';
+    if (exp.company.includes('MASS')) color = 'from-cyan-500 via-blue-500 to-purple-500';
+    if (exp.role.toLowerCase().includes('teaching')) color = 'from-indigo-500 via-blue-500 to-teal-500';
+    return {
+      year,
+      event: exp.role + ' @ ' + exp.company,
+      description: exp.description,
+      icon,
+      color,
+      achievements: exp.achievements,
+      skills: exp.skills,
+      keyProjects: exp.details.keyProjects,
+      technologies: exp.details.technologies,
+      impact: exp.details.impact,
+    };
+  });
+
   return (
-    <div className="min-h-screen pt-24 pb-16">
-      <div className="container mx-auto px-4">
+    <div className="min-h-screen pt-24 pb-16 bg-background relative overflow-hidden">
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-gradient-to-br from-purple-300/20 to-transparent rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute top-1/2 right-0 w-96 h-96 bg-gradient-to-bl from-blue-300/20 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute bottom-0 left-1/3 w-96 h-96 bg-gradient-to-tr from-emerald-300/20 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
+      <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-[#1a2233]">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-foreground">
             <span className="bg-clip-text text-transparent">Professional Experience</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Real-world impact through data-driven solutions and technical excellence
           </p>
         </div>
-
-        <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-3 gap-6">
-            {experiences.map((exp, index) => (
-              <Card 
-                key={exp.company} 
-                className={`group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
-                  expandedExperience === index ? 'md:col-span-3' : ''
-                }`}
-                onClick={() => toggleExpanded(index)}
+        <div className="space-y-6 max-w-5xl mx-auto">
+          {experiences.map((exp, index) => {
+            // Pick an icon based on company or role
+            let Icon = Brain;
+            if (exp.company.includes('Coherent')) Icon = Rocket;
+            if (exp.company.includes('SankalpSoft')) Icon = TrendingUp;
+            if (exp.company.includes('MASS')) Icon = BookOpen;
+            if (exp.role.toLowerCase().includes('teaching')) Icon = GraduationCap;
+            // Pick a color scheme for the icon
+            let iconBg = 'bg-emerald-500/40 border-emerald-500/50 shadow-emerald-500/50';
+            let iconColor = 'text-emerald-400';
+            if (exp.company.includes('Coherent')) { iconBg = 'bg-blue-500/40 border-blue-500/50 shadow-blue-500/50'; iconColor = 'text-blue-400'; }
+            if (exp.company.includes('SankalpSoft')) { iconBg = 'bg-orange-500/40 border-orange-500/50 shadow-orange-500/50'; iconColor = 'text-orange-400'; }
+            if (exp.company.includes('MASS')) { iconBg = 'bg-cyan-500/40 border-cyan-500/50 shadow-cyan-500/50'; iconColor = 'text-cyan-400'; }
+            if (exp.role.toLowerCase().includes('teaching')) { iconBg = 'bg-indigo-500/40 border-indigo-500/50 shadow-indigo-500/50'; iconColor = 'text-indigo-400'; }
+            // Extract the start year from the period string
+            const year = exp.period.match(/\d{4}/)?.[0] || '';
+            return (
+              <Card
+                key={exp.company + exp.role + exp.period}
+                className={`group relative overflow-hidden transition-all duration-300 ease-in-out hover:shadow-2xl hover:-translate-y-1 border border-zinc-900 hover:border-zinc-800 bg-zinc-900/95 backdrop-blur-sm hover:bg-zinc-900 ${iconBg} hover:shadow-2xl`}
+                onMouseEnter={() => setExpandedExperience(index)}
+                onMouseLeave={() => setExpandedExperience(null)}
               >
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="flex-shrink-0">
-                        {companyLogos[exp.company as keyof typeof companyLogos] || (
-                          <div className="w-10 h-10 bg-gradient-to-r from-gray-500 to-gray-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
-                            {exp.company.split(' ').map(word => word[0]).join('').slice(0, 2)}
-                          </div>
-                        )}
+                <CardContent className="p-6">
+                  <div className="flex items-start space-x-6">
+                    {/* Year/Icon Section */}
+                    <div className="flex-shrink-0 flex flex-col items-center min-w-[60px]">
+                      {/* Company Logo */}
+                      <div className="mb-2">
+                        {companyLogos[exp.company as keyof typeof companyLogos]}
                       </div>
-                      <div className="min-w-0">
-                        <CardTitle className="text-lg flex items-center">
-                          {exp.role}
-                          {expandedExperience === index ? 
-                            <ChevronDown className="h-4 w-4 ml-2 transition-transform flex-shrink-0" /> : 
-                            <ChevronRight className="h-4 w-4 ml-2 transition-transform flex-shrink-0" />
-                          }
-                        </CardTitle>
-                        <div className="text-sm text-muted-foreground space-y-1">
-                          <div className="flex items-center space-x-1">
-                            <Building className="h-3 w-3" />
-                            <span className="font-medium">{exp.company}</span>
-                          </div>
-                          <div className="flex items-center space-x-1">
-                            <Calendar className="h-3 w-3" />
-                            <span>{exp.period}</span>
-                          </div>
-                          <span className="text-xs">{exp.location}</span>
+                      <span className="font-bold text-lg text-white mb-2">{year}</span>
+                      {expandedExperience === index && (
+                        <span className="text-xs text-zinc-300 text-center">{exp.period}</span>
+                      )}
+                    </div>
+                    {/* Content Section */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-white transition-colors duration-300">
+                            {exp.role} @ {exp.company}
+                          </h3>
+                          <p className="text-white mb-4 leading-relaxed">
+                            {expandedExperience === index ? exp.description : exp.description}
+                          </p>
+                        </div>
+                        {/* Expand/Collapse Icon */}
+                        <div className="flex-shrink-0 ml-4">
+                          {expandedExperience === index ? (
+                            <ChevronUp className="h-5 w-5 text-white" />
+                          ) : (
+                            <ChevronDown className="h-5 w-5 text-white" />
+                          )}
                         </div>
                       </div>
+                      {/* Skills */}
+                      <div className="flex flex-wrap gap-2 mb-4">
+                        {exp.skills.map((skill) => (
+                          <span
+                            key={skill}
+                            className="px-3 py-1 bg-gradient-to-r from-zinc-800 to-zinc-700 text-white text-sm rounded-md border border-zinc-700 hover:from-zinc-700 hover:to-zinc-600 hover:text-white transition-all duration-200 shadow-md"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                      {/* Expanded Content */}
+                      {expandedExperience === index && (
+                        <div className="space-y-4 pt-4 border-t border-zinc-800 animate-in slide-in-from-top-2 duration-300">
+                          {/* Achievements */}
+                          {exp.achievements && exp.achievements.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-white mb-3 flex items-center">
+                                <Target className="h-4 w-4 mr-2 text-white" />
+                                Key Achievements
+                              </h4>
+                              <ul className="list-disc list-inside space-y-1">
+                                {exp.achievements.map((ach, i) => (
+                                  <li key={i} className="text-sm text-zinc-300">{ach}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {/* Key Projects */}
+                          {exp.details.keyProjects && exp.details.keyProjects.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-white mb-3">Key Projects</h4>
+                              <ul className="list-disc list-inside space-y-1">
+                                {exp.details.keyProjects.map((proj, i) => (
+                                  <li key={i} className="text-sm text-zinc-300">{proj}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+                          {/* Technologies */}
+                          {exp.details.technologies && exp.details.technologies.length > 0 && (
+                            <div>
+                              <h4 className="font-medium text-white mb-3">Technologies Used</h4>
+                              <div className="flex flex-wrap gap-2">
+                                {exp.details.technologies.map((tech, i) => (
+                                  <span key={i} className="px-3 py-1 bg-gradient-to-r from-zinc-800 to-zinc-700 text-white text-sm rounded-md border border-zinc-700 hover:from-zinc-700 hover:to-zinc-600 hover:text-white transition-all duration-200 shadow-md">{tech}</span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          {/* Impact */}
+                          {exp.details.impact && (
+                            <div className="bg-zinc-800 p-4 rounded-lg">
+                              <h4 className="font-medium mb-2 text-white">Impact Summary</h4>
+                              <p className="text-sm text-zinc-300">{exp.details.impact}</p>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  <p className="text-sm text-muted-foreground line-clamp-3">{exp.description}</p>
-                  
-                  <div className="flex flex-wrap gap-1">
-                    {exp.skills.map((skill) => (
-                      <Badge key={skill} className="text-xs bg-[#cbd0ff] text-black font-normal border-none shadow-none">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  {/* Expanded Content */}
-                  {expandedExperience === index && (
-                    <div className="space-y-6 animate-fade-in border-t pt-6">
-                      <div className="grid md:grid-cols-2 gap-6">
-                        <div>
-                          <h4 className="font-semibold mb-3 flex items-center">
-                            <Target className="h-4 w-4 mr-2" />
-                            Key Achievements
-                          </h4>
-                          <ul className="space-y-2">
-                            {exp.achievements.map((achievement, idx) => (
-                              <li key={idx} className="flex items-start space-x-2">
-                                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                                <span className="text-sm text-muted-foreground">{achievement}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        <div>
-                          <h4 className="font-semibold mb-3">Key Projects</h4>
-                          <ul className="space-y-2">
-                            {exp.details.keyProjects.map((project, idx) => (
-                              <li key={idx} className="flex items-start space-x-2">
-                                <div className="w-2 h-2 bg-blue-500 rounded-full mt-2 flex-shrink-0"></div>
-                                <span className="text-sm text-muted-foreground">{project}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-
-                      <div>
-                        <h4 className="font-semibold mb-3">Technologies Used</h4>
-                        <div className="flex flex-wrap gap-2">
-                          {exp.details.technologies.map((tech) => (
-                            <Badge key={tech} className="text-xs bg-[#cbd0ff] text-black font-normal border-none shadow-none">
-                              {tech}
-                            </Badge>
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className="bg-muted/50 p-4 rounded-lg">
-                        <h4 className="font-semibold mb-2">Impact Summary</h4>
-                        <p className="text-sm text-muted-foreground">{exp.details.impact}</p>
-                      </div>
-                    </div>
-                  )}
                 </CardContent>
               </Card>
-            ))}
-          </div>
+            );
+          })}
         </div>
-
         {/* Summary Stats */}
-        <div className="mt-16 bg-muted/50 rounded-lg p-8 max-w-6xl mx-auto">
-          <h2 className="text-2xl font-bold text-center mb-8">Impact Summary</h2>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold text-green-500">$700M+</div>
-              <div className="text-sm text-muted-foreground">Initiative Managed</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-blue-500">35%</div>
-              <div className="text-sm text-muted-foreground">Performance Boosted</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-purple-500">2+ hrs</div>
-              <div className="text-sm text-muted-foreground">Weekly Time Saved</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-orange-500">20%+</div>
-              <div className="text-sm text-muted-foreground">Data Quality Achieved</div>
-            </div>
-          </div>
-        </div>
+        <ImpactSummary />
       </div>
     </div>
   );

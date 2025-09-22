@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: process.env.NODE_ENV === 'production' ? '/PortfolioWebsite/' : '/', // Dynamic base path
+  base: process.env.NODE_ENV === 'production' ? '/portfolio/' : '/', // Dynamic base path
   server: {
     host: "::",
     port: 8080,

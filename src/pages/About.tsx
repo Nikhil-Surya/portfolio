@@ -195,7 +195,7 @@ const About = () => {
                   I'd love to connect and explore how we can create impact together.
                 </p>
                 <Button asChild className="w-full">
-                  <a href="/Nikhil_Suryawanshi_CV.pdf" download>
+                  <a href="/assets/Resume_Nikhil_Suryawanshi.pdf" download>
                   <Download className="h-4 w-4 mr-2" />
                   Download Resume
                   </a>

@@ -220,7 +220,7 @@ const Contact = () => {
               <h4 className="text-xl font-bold mb-4">Resume Preview</h4>
               <div className="mb-4" style={{ height: '60vh' }}>
                 <iframe
-                  src={`${import.meta.env.BASE_URL}Nikhil_Suryawanshi_CV.pdf`}
+                  src={`${import.meta.env.BASE_URL}assets/Resume_Nikhil_Suryawanshi.pdf`}
                   title="Resume Preview"
                   width="100%"
                   height="100%"
@@ -228,7 +228,7 @@ const Contact = () => {
                 />
               </div>
               <a
-                href={`${import.meta.env.BASE_URL}Nikhil_Suryawanshi_CV.pdf`}
+                href={`${import.meta.env.BASE_URL}assets/Resume_Nikhil_Suryawanshi.pdf`}
                 download
                 className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >

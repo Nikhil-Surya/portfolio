@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Briefcase, Code, Globe } from 'lucide-react';
-import { useCountUp } from "@/components/use-count-up";
 
 interface StatItem {
   icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
@@ -34,6 +33,51 @@ const stats: StatItem[] = [
   }
 ];
 
+// Sequential counting animation hook with synchronized ending
+const useSequentialCounter = (finalValue: number, isVisible: boolean) => {
+  const [displayValue, setDisplayValue] = useState(0);
+  const [isCounting, setIsCounting] = useState(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    setIsCounting(true);
+    let currentValue = 0;
+    const increment = 1;
+    
+    // Calculate duration so all counters end at the same time
+    const totalDuration = 2000; // 2 seconds total animation time
+    const countDuration = totalDuration / finalValue; // Adjust speed based on final value
+
+    const countUp = () => {
+      if (currentValue < finalValue) {
+        currentValue += increment;
+        setDisplayValue(currentValue);
+        intervalRef.current = setTimeout(countUp, countDuration);
+      } else {
+        // Reached final value
+        setDisplayValue(finalValue);
+        setIsCounting(false);
+      }
+    };
+
+    // Start counting after a small delay
+    const startDelay = setTimeout(() => {
+      countUp();
+    }, 500);
+
+    return () => {
+      clearTimeout(startDelay);
+      if (intervalRef.current) {
+        clearTimeout(intervalRef.current);
+      }
+    };
+  }, [finalValue, isVisible]);
+
+  return { displayValue, isCounting };
+};
+
 export const StatsCounter: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -55,10 +99,6 @@ export const StatsCounter: React.FC = () => {
     return () => observer.disconnect();
   }, []);
 
-  // Use a single useCountUp and animate all stats to the same value for simplicity
-  const maxValue = Math.max(...stats.map(stat => stat.value));
-  const animatedValue = useCountUp(maxValue, 2000, isVisible);
-
   return (
     <div ref={sectionRef} className="max-w-4xl mx-auto">
       <div className="text-center mb-8">
@@ -66,18 +106,41 @@ export const StatsCounter: React.FC = () => {
         <p className="text-muted-foreground">Quantifying my journey in data analytics</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        {stats.map((stat) => {
-          // Clamp the animated value to each stat's value
-          const count = Math.min(animatedValue, stat.value);
+        {stats.map((stat, index) => {
+          const { displayValue, isCounting } = useSequentialCounter(stat.value, isVisible);
+          
           return (
-            <Card key={stat.label} className="text-center hover:shadow-lg transition-all duration-300">
+            <Card key={stat.label} className="text-center hover:shadow-lg transition-all duration-300 group">
               <CardContent className="p-6">
-                <stat.icon className={`h-8 w-8 ${stat.color} mx-auto mb-2`} />
-                <div className="text-2xl md:text-3xl font-bold">
-                  {Math.floor(count)}
-                  {stat.suffix}
+                <stat.icon className={`h-8 w-8 ${stat.color} mx-auto mb-2 transition-transform duration-300 group-hover:scale-110`} />
+                <div className="relative">
+                  <div className={`text-2xl md:text-3xl font-bold transition-all duration-200 ${
+                    isCounting ? 'text-yellow-500 animate-pulse' : stat.color
+                  }`}>
+                    {displayValue}
+                    {stat.suffix}
+                  </div>
+                  {/* Counting effect overlay */}
+                  {isCounting && (
+                    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/20 to-transparent animate-pulse pointer-events-none"></div>
+                  )}
                 </div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-sm text-muted-foreground mt-2">{stat.label}</div>
+                
+                {/* Counting indicator */}
+                {isCounting && (
+                  <div className="mt-2">
+                    <div className="flex justify-center space-x-1">
+                      {[...Array(3)].map((_, i) => (
+                        <div
+                          key={i}
+                          className="w-1 h-1 bg-yellow-400 rounded-full animate-bounce"
+                          style={{ animationDelay: `${i * 0.1}s` }}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           );

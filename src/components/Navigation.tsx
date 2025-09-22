@@ -65,7 +65,7 @@ export const Navigation = () => {
               <>
                 <ThemeToggle />
                 <Button variant="ghost" size="sm" asChild>
-                  <a href="https://github.com/Nikhil-Surya/PortfolioWebsite" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/Nikhil-Surya" target="_blank" rel="noopener noreferrer">
                     <Github className="h-4 w-4" />
                   </a>
                 </Button>
@@ -110,7 +110,7 @@ export const Navigation = () => {
               <div className="flex items-center space-x-2 px-3 py-2">
                 <ThemeToggle />
                 <Button variant="ghost" size="sm" asChild>
-                  <a href="https://github.com/Nikhil-Surya/PortfolioWebsite" target="_blank" rel="noopener noreferrer">
+                  <a href="https://github.com/Nikhil-Surya" target="_blank" rel="noopener noreferrer">
                     <Github className="h-4 w-4" />
                   </a>
                 </Button>
